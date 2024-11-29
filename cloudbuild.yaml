@@ -1,0 +1,33 @@
+# Axmos Technologies 
+# Axmos Front End Example is an Open Source Project
+# This file is just an example and is distributed without any warranty
+# Made with love
+
+steps:
+#Build and push docker image
+- name: 'gcr.io/cloud-builders/npm'
+  script: |
+    #!/usr/bin/env bash
+    set -o xtrace
+    npm install;
+    npm run build;
+  env:
+  - 'BRANCH_NAME=$BRANCH_NAME'
+  - 'PROJECT_ID=$PROJECT_ID'
+#Execute deploy.sh with image tag provided by docker build step
+- name: 'gcr.io/cloud-builders/gcloud'
+  script: |
+    #!/usr/bin/env bash
+    set -o xtrace
+    sh deploy.sh
+  env:
+  - 'BRANCH_NAME=$BRANCH_NAME'
+  - 'PROJECT_ID=$PROJECT_ID'
+#Execute deploy.sh with image tag provided by docker build step
+#- name: 'gcr.io/cloud-builders/curl'
+#  script: |
+#    #!/usr/bin/env bash
+#    set -o xtrace
+#    curl Post https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/purge_cache
+#  env:
+#  - 'CLOUDFLARE_ZONE_ID=$CLOUDFLARE_ZONE_ID'
